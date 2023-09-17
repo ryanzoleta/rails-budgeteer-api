@@ -1,7 +1,7 @@
 class AccountsController < ApplicationController
   def index
-    @accounts = Account.all
-    render json: @accounts
+    @accounts = Account.includes(:account_type).all
+    render json: @accounts.to_json(include: :account_type)
   end
 
   def create
@@ -23,8 +23,8 @@ class AccountsController < ApplicationController
   def update
     @account = Account.find(params[:id])
 
-    @account.name = params[:name]
-    @account.account_type_id = params[:account_type_id]
+    @account.name = params[:name] || @account.name
+    @account.account_type_id = params[:account_type_id] || @account.account_type_id
 
     if @account.save
       render json: @account

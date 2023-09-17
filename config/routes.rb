@@ -5,4 +5,5 @@ Rails.application.routes.draw do
   # root "articles#index"
   resources :account_types
   resources :accounts
+  resources :transactions
 end
