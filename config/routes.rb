@@ -6,4 +6,6 @@ Rails.application.routes.draw do
   resources :account_types
   resources :accounts
   resources :transactions
+  resources :categories
+  resources :budgets
 end
