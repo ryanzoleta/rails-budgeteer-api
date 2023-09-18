@@ -1,6 +1,10 @@
 class BudgetsController < ApplicationController
   def index
-    @budgets = Budget.all
+    @budgets = if params[:year]
+                 Budget.where('EXTRACT(YEAR FROM month) = ?', params[:year]).all
+               else
+                 Budget.all
+               end
     render json: @budgets
   end
 
