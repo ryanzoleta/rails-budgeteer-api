@@ -12,14 +12,23 @@ class BudgetsController < ApplicationController
       all_new_budgets = []
 
       (1..12).each do |m|
-        month_budget = @budgets.find { |b| b[:month] == m }
-        next if month_budget
+        month_budget = @budgets.select { |b| b[:month] == m }
 
-        new_budgets = @categories.map do |category|
-          { category_id: category.id, month: m, year: params[:year], budgeted_amount: 0 }
+        if month_budget
+          @categories.each do |category|
+            category_budget = month_budget.find { |b| b[:category_id] == category.id }
+
+            unless category_budget
+              all_new_budgets.push({ category_id: category.id, month: m, year: params[:year], budgeted_amount: 0 })
+            end
+          end
+        else
+          new_budgets = @categories.map do |category|
+            { category_id: category.id, month: m, year: params[:year], budgeted_amount: 0 }
+          end
+
+          all_new_budgets.concat new_budgets
         end
-
-        all_new_budgets.concat new_budgets
       end
 
       unless all_new_budgets.empty?
