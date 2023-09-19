@@ -5,7 +5,8 @@ class TransactionsController < ApplicationController
   end
 
   def create
-    @transaction = Transaction.new({ account_id: params[:account_id], amount: params[:amount], date: params[:date] })
+    @transaction = Transaction.new({ account_id: params[:account_id], category_id: params[:category_id],
+                                     amount: params[:amount], date: params[:date] })
 
     if @transaction.save
       render json: @transaction
