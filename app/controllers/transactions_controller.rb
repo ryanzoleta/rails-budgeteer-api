@@ -1,7 +1,7 @@
 class TransactionsController < ApplicationController
   def index
-    @transactions = Transaction.includes(account: :account_type).all
-    render json: @transactions.to_json(include: { account: { include: :account_type } })
+    @transactions = Transaction.includes(account: :account_type).includes(:category).order(date: :desc).all
+    render json: @transactions.to_json(include: { account: { include: :account_type }, category: {} })
   end
 
   def create
@@ -25,6 +25,7 @@ class TransactionsController < ApplicationController
     @transaction = Transaction.find(params[:id])
 
     @transaction.account_id = params[:account_id] || @transaction.account_id
+    @transaction.category_id = params[:category_id] || @transaction.category_id
     @transaction.amount = params[:amount] || @transaction.amount
     @transaction.date = params[:date] || @transaction.date
 
