@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_18_161725) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_19_134750) do
   create_table "account_types", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.text "name"
     t.datetime "created_at", null: false
@@ -53,7 +53,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_18_161725) do
   end
 
   add_foreign_key "accounts", "account_types"
-  add_foreign_key "budgets", "categories"
+  add_foreign_key "budgets", "categories", on_delete: :cascade
   add_foreign_key "transactions", "accounts"
   add_foreign_key "transactions", "categories"
 end
