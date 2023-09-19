@@ -37,7 +37,24 @@ class BudgetsController < ApplicationController
       end
     end
 
-    render json: @budgets
+    @budgets_json = @budgets.as_json
+
+    @sums = Transaction.select('EXTRACT(YEAR FROM date) AS year, EXTRACT(MONTH FROM date) AS month, category_id, SUM(amount) AS total_amount')
+                       .group('year, month, category_id')
+
+    @sums.each do |s|
+      puts s[:category_id]
+    end
+
+    @budgets_json.each do |b|
+      sum = @sums.find do |s|
+        s[:year] == b['year'] and s[:month] == b['month'] and s[:category_id] == b['category_id']
+      end
+
+      b[:sum] = sum ? sum[:total_amount] : 0
+    end
+
+    render json: @budgets_json
   end
 
   def create
