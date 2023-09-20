@@ -1,7 +1,17 @@
 class AccountsController < ApplicationController
   def index
     @accounts = Account.includes(:account_type).all
-    render json: @accounts.to_json(include: :account_type)
+    @accounts_json = @accounts.as_json(include: :account_type)
+
+    @balances = Transaction.group('account_id').sum(:amount)
+
+    @accounts_json.each do |a|
+      balance = @balances[a['id']]
+
+      a['balance'] = balance || 0
+    end
+
+    render json: @accounts_json
   end
 
   def create
